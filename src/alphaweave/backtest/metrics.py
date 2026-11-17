@@ -49,6 +49,21 @@ def t_stat(returns: np.ndarray) -> float:
     return float(result.statistic)
 
 
+def p_value(returns: np.ndarray) -> float:
+    """Two-sided p-value for the same one-sample t-test as `t_stat`.
+
+    Kept separate from `t_stat` (rather than returned as a tuple) so each
+    metric can be reported independently, but both come from the same
+    `ttest_1samp` call conceptually -- this is the input `benjamini_hochberg`
+    expects when correcting across many tested hypotheses.
+    """
+    returns = np.asarray(returns, dtype=float)
+    if returns.size < 2:
+        return float("nan")
+    result = stats.ttest_1samp(returns, popmean=0.0)
+    return float(result.pvalue)
+
+
 def benjamini_hochberg(p_values: list[float], fdr: float = 0.05) -> list[bool]:
     """Benjamini-Hochberg FDR correction.
 

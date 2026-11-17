@@ -1,0 +1,13 @@
+[
+  {
+    "id": "momentum-12-1",
+    "description": "12-1 month price momentum, equal-weighted across tickers",
+    "source_context": "tickers=['AAPL', 'MSFT'], 2018-01-01..2023-01-01",
+    "created_at": 1785218635.197409,
+    "status": "kept",
+    "sharpe": 0.24304781639972475,
+    "max_drawdown": -0.11991255804794254,
+    "t_stat": 0.5103269253041015,
+    "rejection_reason": null
+  }
+]

@@ -1,7 +1,13 @@
 import numpy as np
 import pytest
 
-from alphaweave.backtest.metrics import benjamini_hochberg, max_drawdown, sharpe_ratio, t_stat
+from alphaweave.backtest.metrics import (
+    benjamini_hochberg,
+    max_drawdown,
+    p_value,
+    sharpe_ratio,
+    t_stat,
+)
 
 
 def test_sharpe_ratio_zero_vol_returns_nan():
@@ -54,3 +60,20 @@ def test_benjamini_hochberg_mixed():
 
 def test_benjamini_hochberg_empty():
     assert benjamini_hochberg([]) == []
+
+
+def test_p_value_significant_positive_mean_is_small():
+    returns = np.full(100, 0.01) + np.random.default_rng(1).normal(0, 0.0001, 100)
+    assert p_value(returns) < 0.01
+
+
+def test_p_value_matches_scipy_directly():
+    from scipy import stats as scipy_stats
+
+    returns = np.random.default_rng(2).normal(0.0005, 0.01, 300)
+    expected = scipy_stats.ttest_1samp(returns, popmean=0.0).pvalue
+    assert p_value(returns) == pytest.approx(expected)
+
+
+def test_p_value_nan_for_short_series():
+    assert np.isnan(p_value(np.array([0.01])))
